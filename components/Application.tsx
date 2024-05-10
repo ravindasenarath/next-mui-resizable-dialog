@@ -30,7 +30,7 @@ const Application = () => {
                     status={modalOpen}
                     title='Resizable Modal'
                     >
-                    <p>Resizable and Draggable dialog box</p>
+                    <p></p>
                 </ResizableModal>
             </div>
         </div>

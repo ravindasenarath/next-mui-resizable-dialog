@@ -167,9 +167,7 @@ const ResizableModal = ({ status, onClose, title,  children }: MapModalType) => 
                             </TitleContent>
                         </Title>
                         <DialogContent>
-                            <DialogContentText>
-                                {children}
-                            </DialogContentText>
+                            {children}
                         </DialogContent>
                     </>
                 </ResizableBox>
