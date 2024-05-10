@@ -155,15 +155,12 @@ const ResizableModal = ({ status, onClose, title,  children }: MapModalType) => 
                                 <ModalTitle>{title}</ModalTitle>
                                 <DialogControlIcons>
                                     <ControlButton title="Minimize" size="small">
-                                        {/* <span className="material-icons">minimize</span> */}
                                         <MinimizeIcon/>
                                     </ControlButton>
                                     <ControlButton title="Full Screen" size="small" onClick={handleFullscreenClick}>
-                                        {/* <span className="material-icons">crop_din</span> */}
                                         {isFullscreen ? <FilterNoneIcon/> :  <CropDinIcon/>}
                                     </ControlButton>
                                     <ControlButton title="Close" size="small" onClick={handleCloseCick}>
-                                        {/* <span className="material-icons">close</span> */}
                                         <CloseIcon/>
                                     </ControlButton>
                                 </DialogControlIcons>
@@ -171,7 +168,7 @@ const ResizableModal = ({ status, onClose, title,  children }: MapModalType) => 
                         </Title>
                         <DialogContent>
                             <DialogContentText>
-                                Resize using the control in the bottom right corner.
+                                {children}
                             </DialogContentText>
                         </DialogContent>
                     </>
