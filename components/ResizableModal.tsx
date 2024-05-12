@@ -1,9 +1,9 @@
 
-import { Button, Dialog, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Button, Dialog, DialogContent, DialogProps, DialogTitle } from "@mui/material";
 import Paper, { PaperProps } from '@mui/material/Paper';
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
-import Draggable from "react-draggable";
+import Draggable, { ControlPosition } from "react-draggable";
 import { ResizableBox } from "react-resizable";
 import CloseIcon from '@mui/icons-material/Close';
 import MinimizeIcon from '@mui/icons-material/Minimize';
@@ -11,9 +11,36 @@ import CropDinIcon from '@mui/icons-material/CropDin';
 import FilterNoneIcon from '@mui/icons-material/FilterNone';
 import "react-resizable/css/styles.css";
 
-const DialogWrapper = styled(Dialog)(({ theme }) => ({
-    // top: -150,
-    // left: 1419,
+type DraggablePaperType = PaperProps & {
+    defaultPosition?: ControlPosition,
+}
+
+const DraggablePaperComponent = (props: DraggablePaperType) => {
+    const nodeRef = useRef(null);
+    return (
+        <Draggable
+            handle="#draggable-dialog-title"
+            cancel={'[class*="MuiDialogContent-root"]'}
+            nodeRef={nodeRef}
+            bounds="parent"
+            defaultPosition={props.defaultPosition}
+        >
+            <Paper {...props} ref={nodeRef}/>
+        </Draggable>
+    );
+}
+
+type Overwrite<T, U> = Pick<T, Exclude<keyof T, keyof U>> & U;
+
+type DraggableDialogType = Overwrite<DialogProps, {PaperProps?: DraggablePaperType}>
+
+const DraggableDialog = (props: DraggableDialogType) => {
+    return (
+        <Dialog {...props}/>
+    )
+}
+
+const DialogWrapper = styled(DraggableDialog)(({ theme }) => ({
     position: 'absolute'
 }))
 
@@ -52,26 +79,12 @@ const ModalTitle = styled('span')(({ theme }) => ({
 type MapModalType = {
     status: boolean,
     title: string,
+    defaultPosition?: ControlPosition,
     onClose: () => void,
     children: ReactNode
 }
 
-const PaperComponent = (props: PaperProps) => {
-    const nodeRef = useRef(null);
-    return (
-        <Draggable
-            handle="#draggable-dialog-title"
-            cancel={'[class*="MuiDialogContent-root"]'}
-            nodeRef={nodeRef}
-            bounds="parent"
-        >
-            <Paper {...props} ref={nodeRef}/>
-        </Draggable>
-    );
-}
-
-
-const ResizableModal = ({ status, onClose, title,  children }: MapModalType) => {
+const ResizableModal = ({ status, onClose, title, defaultPosition, children }: MapModalType) => {
     const [height, setHeight] = useState(554);
     const [width, setWidth] = useState(1043);
     const [isFullscreen, setIsFullsreen] = useState(false);
@@ -129,7 +142,7 @@ const ResizableModal = ({ status, onClose, title,  children }: MapModalType) => 
             <DialogWrapper
                 open={status}
                 onClose={handleClose}
-                PaperComponent={PaperComponent}
+                PaperComponent={DraggablePaperComponent}
                 aria-labelledby="draggable-dialog-title"
                 hideBackdrop={true}
                 transitionDuration={0}
@@ -143,6 +156,9 @@ const ResizableModal = ({ status, onClose, title,  children }: MapModalType) => 
                     // Do your work requiring the node here, but make sure node isn't null.
                     console.log("ref function", node);
                   }}
+                PaperProps={{
+                    defaultPosition,
+                }}
             >
                 <ResizableBox 
                     height={height}

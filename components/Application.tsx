@@ -29,8 +29,9 @@ const Application = () => {
                     onClose={handleCloseModalClick}
                     status={modalOpen}
                     title='Resizable Modal'
-                    >
-                    <p></p>
+                    defaultPosition={{x: 410, y: -100}}
+                >
+                    <p>Resizable and draggable MUI Dialog</p>
                 </ResizableModal>
             </div>
         </div>
