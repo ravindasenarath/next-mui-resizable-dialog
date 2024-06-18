@@ -9,12 +9,13 @@ import Paper, { PaperProps } from "@mui/material/Paper";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Draggable, { ControlPosition } from "react-draggable";
-import { ResizableBox } from "react-resizable";
+import { Resizable, ResizableBox } from "react-resizable";
 import CloseIcon from "@mui/icons-material/Close";
 import MinimizeIcon from "@mui/icons-material/Minimize";
 import CropDinIcon from "@mui/icons-material/CropDin";
 import FilterNoneIcon from "@mui/icons-material/FilterNone";
 import "react-resizable/css/styles.css";
+import { Rnd } from "react-rnd";
 
 type DraggablePaperType = PaperProps & {
   defaultPosition?: ControlPosition;
@@ -23,15 +24,19 @@ type DraggablePaperType = PaperProps & {
 const DraggablePaperComponent = (props: DraggablePaperType) => {
   const nodeRef = useRef(null);
   return (
-    <Draggable
-      handle="#draggable-dialog-title"
-      cancel={'[class*="MuiDialogContent-root"]'}
-      nodeRef={nodeRef}
-      bounds="parent"
-      defaultPosition={props.defaultPosition}
-    >
-      <Paper {...props} ref={nodeRef} />
-    </Draggable>
+    <Rnd>
+      <Paper
+        {...props}
+        style={{
+          margin: 0,
+          maxHeight: "100%",
+          maxWidth: "100%",
+          height: "100%",
+          width: "100%",
+        }}
+        ref={nodeRef}
+      />
+    </Rnd>
   );
 };
 
@@ -149,64 +154,49 @@ const ResizableModal = ({
     // }
   };
 
+  if (!status) {
+    return null;
+  }
+
   return (
     <>
-      <DialogWrapper
-        open={status}
-        onClose={handleClose}
-        PaperComponent={DraggablePaperComponent}
-        aria-labelledby="draggable-dialog-title"
-        hideBackdrop={true}
-        transitionDuration={0}
-        maxWidth={false}
-        fullScreen={isFullscreen}
-        // container={() => document.getElementById('ui')}
-        // style={{position: 'absolute'}}
-        // BackdropProps={{ style: { position: 'absolute' } }}
-        ref={(node) => {
-          dialogRef.current = node;
-          // Do your work requiring the node here, but make sure node isn't null.
-          console.log("ref function", node);
-        }}
-        PaperProps={{
-          defaultPosition,
-        }}
-      >
-        <ResizableBox
-          height={height}
-          width={width}
-          // resizeHandles={['e', 's', 'se']}
-          onResize={onResizableBoxResize}
+      <Rnd>
+        <Paper
+          style={{
+            margin: 0,
+            maxHeight: "100%",
+            maxWidth: "100%",
+            height: "100%",
+            width: "100%",
+          }}
         >
-          <>
-            <Title id="draggable-dialog-title">
-              <TitleContent>
-                <ModalTitle>{title}</ModalTitle>
-                <DialogControlIcons>
-                  <ControlButton title="Minimize" size="small">
-                    <MinimizeIcon />
-                  </ControlButton>
-                  <ControlButton
-                    title="Full Screen"
-                    size="small"
-                    onClick={handleFullscreenClick}
-                  >
-                    {isFullscreen ? <FilterNoneIcon /> : <CropDinIcon />}
-                  </ControlButton>
-                  <ControlButton
-                    title="Close"
-                    size="small"
-                    onClick={handleCloseCick}
-                  >
-                    <CloseIcon />
-                  </ControlButton>
-                </DialogControlIcons>
-              </TitleContent>
-            </Title>
-            <DialogContent>{children}</DialogContent>
-          </>
-        </ResizableBox>
-      </DialogWrapper>
+          <Title id="draggable-dialog-title">
+            <TitleContent>
+              <ModalTitle>{title}</ModalTitle>
+              <DialogControlIcons>
+                <ControlButton title="Minimize" size="small">
+                  <MinimizeIcon />
+                </ControlButton>
+                <ControlButton
+                  title="Full Screen"
+                  size="small"
+                  onClick={handleFullscreenClick}
+                >
+                  {isFullscreen ? <FilterNoneIcon /> : <CropDinIcon />}
+                </ControlButton>
+                <ControlButton
+                  title="Close"
+                  size="small"
+                  onClick={handleCloseCick}
+                >
+                  <CloseIcon />
+                </ControlButton>
+              </DialogControlIcons>
+            </TitleContent>
+          </Title>
+          <DialogContent>{children}</DialogContent>
+        </Paper>
+      </Rnd>
     </>
   );
 };
